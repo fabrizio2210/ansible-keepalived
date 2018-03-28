@@ -1,29 +1,21 @@
 ---
 # This role installs and sets up keepalived
 
-- name: Install keepalived (Centos)
-  yum: name=keepalived state=present
-  when: ansible_os_family == "RedHat"
-  tags: keepalived
-  notify: restart keepalived
+- name: Ricavo IP Master
+  set_fact:
+    keepalived_master_ip: "{{ play_hosts|map('extract', hostvars,['ansible_eth0','ipv4','address'])|list|sort(reverse=true)|first }}"
+
+- name: Vedi IP Master
+  debug:
+    var: keepalived_master_ip
+  run_once: true
 
 - name: Install keepalived (debian/ubuntu)
-  apt: name=keepalived state=latest
-  when: ansible_os_family == "Debian"
+  apt: name=keepalived state=latest cache_valid_time=86400 update_cache=yes
   tags: keepalived
   notify: restart keepalived
 
-- name: chk_service script shell
-  template: 
-    src: check_script.sh.j2 
-    dest: /etc/keepalived/check_script.sh
-    mode: 0755
-    owner: root
-    group: root
-  tags: keepalived
-  notify: restart keepalived
-
-- name: Configurar configuració de keepalived
+- name: Configurazione di keepalived
   template: src=keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf
   tags: keepalived
   notify: restart keepalived
