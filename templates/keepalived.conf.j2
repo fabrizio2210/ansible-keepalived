@@ -1,5 +1,5 @@
 vrrp_script chk_service { 
-        script "/bin/pidof {{ keepalived_daemon_checked }}"     
+        script "/usr/bin/pgrep {{ keepalived_daemon_checked }}"     
         interval 2                      # check every 2 seconds
 }
 vrrp_instance VI_1 {
