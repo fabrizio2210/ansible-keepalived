@@ -1,3 +1,6 @@
+global_defs {
+        enable_script_security
+}
 vrrp_script chk_service { 
         script "/usr/bin/pgrep {{ keepalived_daemon_checked }}"     
         interval 2                      # check every 2 seconds
