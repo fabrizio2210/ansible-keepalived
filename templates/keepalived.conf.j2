@@ -4,6 +4,7 @@ global_defs {
 vrrp_script chk_service { 
         script "/usr/bin/pgrep {{ keepalived_daemon_checked }}"     
         interval 2                      # check every 2 seconds
+        user root
 }
 vrrp_instance VI_1 {
     {% if keepalived_master_ip ==  ansible_eth0.ipv4.address %}
