@@ -3,7 +3,7 @@ global_defs {
 }
 vrrp_script chk_service { 
         script "/usr/bin/pgrep {{ keepalived_daemon_checked }}"     
-        interval 2                      # check every 2 seconds
+        interval 5                      # check every 5 seconds
         user root
 }
 vrrp_instance VI_1 {
@@ -17,6 +17,7 @@ vrrp_instance VI_1 {
     {% set IPoctet = ansible_eth0.ipv4.address.split('.') %}
     priority {{ (IPoctet|last|int)*10 }}
     advert_int 1
+    vrrp_garp_master_refresh 30
     authentication {
         auth_type PASS
         auth_pass {{ keepalived_auth_pass }}
